@@ -12,8 +12,13 @@ const SignUp = () => {
         e.preventDefault()
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(email, password)
+        const terms = e.target.terms.checked;
+        console.log(email, password, terms);
 
+        if (!terms) {
+            setErrorMeassage('Please accept our terms and conditions')
+            return;
+        }
         //validate a user
         const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
         if (passwordRegExp.test(password) === false) {
@@ -52,11 +57,16 @@ const SignUp = () => {
                             <button onClick={() => setShowPassword(!showPassword)} className="btn btn-xs absolute top-2 right-6">
                                 {
                                     showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>
-                               }
+                                }
                             </button>
 
                         </div>
                         <div><a className="link link-hover">Forgot password?</a></div>
+                        <label className="label mt-4">
+                            <input type="checkbox" name="terms" className="checkbox" />
+                            Accept terms and conditions
+                        </label>
+                        <br />
                         <button className="btn btn-neutral mt-4">SignUp</button>
                     </form>
                     {

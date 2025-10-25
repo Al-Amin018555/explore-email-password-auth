@@ -1,10 +1,12 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase.init";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignUp = () => {
     const [success, setSucess] = useState(false);
     const [errorMessage, setErrorMeassage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSignUp = e => {
         e.preventDefault()
@@ -14,7 +16,7 @@ const SignUp = () => {
 
         //validate a user
         const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-        if(passwordRegExp.test(password) === false){
+        if (passwordRegExp.test(password) === false) {
             setErrorMeassage('Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.')
             return;
         }
@@ -41,7 +43,19 @@ const SignUp = () => {
                         <label className="label">Email</label>
                         <input type="email" name="email" className="input" placeholder="Email" />
                         <label className="label mt-4">Password</label>
-                        <input name="password" type="password" className="input" placeholder="Password" />
+
+                        <div className="relative">
+                            <input name="password"
+                                type={showPassword ? 'text' : 'password'}
+                                className="input"
+                                placeholder="Password" />
+                            <button onClick={() => setShowPassword(!showPassword)} className="btn btn-xs absolute top-2 right-6">
+                                {
+                                    showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>
+                               }
+                            </button>
+
+                        </div>
                         <div><a className="link link-hover">Forgot password?</a></div>
                         <button className="btn btn-neutral mt-4">SignUp</button>
                     </form>

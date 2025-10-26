@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase.init";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -11,10 +11,12 @@ const SignUp = () => {
 
     const handleSignUp = e => {
         e.preventDefault()
+        const name = e.target.name.value;
+        const photo = e.target.photo.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
         const terms = e.target.terms.checked;
-        console.log(email, password, terms);
+        console.log(email, password, name, photo, terms);
 
         setErrorMeassage('')
         setSucess(false)
@@ -34,19 +36,32 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
                 console.log(result);
-              
                 //email verfiy
                 sendEmailVerification(auth.currentUser)
-                .then(() => {
-                      setSucess(true)
-                      alert('We sent you a verification email. please check your email')
-                })
+                    .then(() => {
+                        setSucess(true)
+                        alert('We sent you a verification email. please check your email')
+                    })
+                //update user profile
+                const profile = {
+                    displayName: name,
+                    photoURL: photo,
+                }
+                updateProfile(auth.currentUser, profile)
+                    .then(() => {
+                        console.log("user profile updated");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+
             })
             .catch(error => {
                 console.log(error);
                 setErrorMeassage(error.message)
 
             })
+
     }
     return (
         <div className="max-w-2/4  mx-auto flex justify-center">
@@ -54,6 +69,10 @@ const SignUp = () => {
                 <div className="card-body">
                     <h1 className="text-4xl font-bold">Please SignUp now!</h1>
                     <form onSubmit={handleSignUp}>
+                        <label className="label">Name</label>
+                        <input type="text" name="name" className="input mb-4" placeholder="Your Name" />
+                        <label className="label">Photo URL</label>
+                        <input type="text" name="photo" className="input mb-4" placeholder="Your photo URL" />
                         <label className="label">Email</label>
                         <input type="email" name="email" className="input" placeholder="Email" />
                         <label className="label mt-4">Password</label>

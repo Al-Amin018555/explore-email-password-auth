@@ -89,7 +89,6 @@ const SignUp = () => {
                             </button>
 
                         </div>
-                        <div><a className="link link-hover">Forgot password?</a></div>
                         <label className="label mt-4">
                             <input type="checkbox" name="terms" className="checkbox" />
                             Accept terms and conditions

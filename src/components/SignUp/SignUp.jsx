@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "../../firebase.init";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -16,6 +16,9 @@ const SignUp = () => {
         const terms = e.target.terms.checked;
         console.log(email, password, terms);
 
+        setErrorMeassage('')
+        setSucess(false)
+
         if (!terms) {
             setErrorMeassage('Please accept our terms and conditions')
             return;
@@ -31,13 +34,18 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
                 console.log(result);
-                setErrorMeassage('')
-                setSucess(true)
+              
+                //email verfiy
+                sendEmailVerification(auth.currentUser)
+                .then(() => {
+                      setSucess(true)
+                      alert('We sent you a verification email. please check your email')
+                })
             })
             .catch(error => {
                 console.log(error);
                 setErrorMeassage(error.message)
-                setSucess(false)
+
             })
     }
     return (
